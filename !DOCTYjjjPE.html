@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Herencia Genética - Cuadro de Punnett</title>
+    <style>
+        :root {
+            --azul-fondo: #81A9DB;
+            --coral-marco: #F6A385;
+            --coral-hover: #E88E6D;
+            --blanco: #FFFFFF;
+            --texto-titulo: #D85A3F;
+            --texto-oscuro: #2C3E50;
+            --beige-caja: #FFF9F5;
+            --borde-caja: #F1C3B2;
+            --verde-correcto: #2E7D32;
+            --rojo-incorrecto: #C62828;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: var(--azul-fondo);
+            color: var(--texto-oscuro);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .main-frame {
+            max-width: 850px;
+            width: 100%;
+            background-color: var(--coral-marco);
+            border-radius: 18px;
+            padding: 16px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .content-container {
+            background-color: var(--blanco);
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 2px solid var(--coral-marco);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        header h1 {
+            color: var(--texto-titulo);
+            margin: 0 0 8px 0;
+            font-size: 1.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .integrantes {
+            font-size: 0.95rem;
+            color: var(--texto-oscuro);
+            font-weight: 600;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            flex: 1;
+            min-width: 130px;
+            padding: 10px 14px;
+            border: 2px solid var(--coral-marco);
+            background-color: var(--blanco);
+            color: var(--texto-titulo);
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+        }
+
+        .tab-btn:hover {
+            background-color: var(--coral-hover);
+            color: white;
+        }
+
+        .tab-btn.active {
+            background-color: var(--coral-marco);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* PREGUNTAS GUIA */
+        .question-card {
+            background-color: var(--beige-caja);
+            border: 1px solid var(--borde-caja);
+            border-left: 5px solid var(--texto-titulo);
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin-bottom: 12px;
+        }
+
+        .question-card h3 {
+            margin: 0 0 6px 0;
+            color: var(--texto-titulo);
+            font-size: 1.05rem;
+        }
+
+        .question-card p {
+            margin: 0;
+            line-height: 1.5;
+            font-size: 0.95rem;
+        }
+
+        /* GENERADOR PUNNETT */
+        .punnett-controls {
+            background-color: var(--beige-caja);
+            border: 1px solid var(--borde-caja);
+            border-radius: 10px;
+            padding: 16px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .select-group label {
+            font-weight: bold;
+            color: var(--texto-titulo);
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        select {
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid var(--borde-caja);
+            font-weight: bold;
+        }
+
+        .punnett-table {
+            border-collapse: collapse;
+            margin: 15px auto;
+            background-color: white;
+            border: 2px solid var(--coral-marco);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .punnett-table td, .punnett-table th {
+            border: 1px solid var(--coral-marco);
+            padding: 12px 20px;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+
+        .punnett-table th {
+            background-color: var(--beige-caja);
+            color: var(--texto-titulo);
+        }
+
+        /* TIMER */
+        .timer-box {
+            background-color: var(--beige-caja);
+            border: 1px solid var(--borde-caja);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .timer-display {
+            font-size: 3.2rem;
+            font-weight: bold;
+            color: var(--texto-titulo);
+            margin: 10px 0;
+        }
+
+        .btn {
+            background-color: var(--coral-marco);
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 4px;
+        }
+
+        .btn:hover {
+            background-color: var(--coral-hover);
+        }
+
+        .btn-reset {
+            background-color: #90A4AE;
+        }
+
+        /* FLASHCARDS */
+        .flashcard {
+            background-color: var(--beige-caja);
+            border: 2px solid var(--borde-caja);
+            border-radius: 12px;
+            padding: 30px 20px;
+            text-align: center;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            font-size: 1.1rem;
+            cursor: pointer;
+            margin-bottom: 15px;
+        }
+
+        /* QUIZ */
+        .quiz-card {
+            background-color: var(--beige-caja);
+            border: 1px solid var(--borde-caja);
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 14px;
+        }
+
+        .quiz-card h3 {
+            margin: 0 0 10px 0;
+            color: var(--texto-titulo);
+            font-size: 1rem;
+        }
+
+        .option-btn {
+            display: block;
+            width: 100%;
+            background-color: white;
+            border: 1px solid var(--borde-caja);
+            padding: 10px;
+            border-radius: 6px;
+            text-align: left;
+            margin-bottom: 6px;
+            cursor: pointer;
+        }
+
+        .option-btn:hover {
+            background-color: #FFF0EB;
+        }
+
+        .feedback {
+            margin-top: 8px;
+            padding: 8px;
+            border-radius: 6px;
+            font-weight: bold;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="main-frame">
+    <div class="content-container">
+        <header>
+            <h1>Herencia Genética usando el Cuadro de Punnett</h1>
+            <div class="integrantes">
+                Amy Barba • Cristy Falquez • Sara Castilla • Maximiliana Calle
+            </div>
+        </header>
+
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="switchTab('questions')">Preguntas Guía</button>
+            <button class="tab-btn" onclick="switchTab('punnett-sim')">Cuadro de Punnett</button>
+            <button class="tab-btn" onclick="switchTab('timer')">Cronómetro</button>
+            <button class="tab-btn" onclick="switchTab('flashcards')">Tarjetas</button>
+            <button class="tab-btn" onclick="switchTab('quiz')">Preguntas al Público</button>
+        </div>
+
+        <!-- PREGUNTAS GUIA -->
+        <div id="questions" class="tab-content active">
+            <div class="question-card">
+                <h3>1. ¿Quién fue Reginald Punnett?</h3>
+                <p>Genetista británico que creó el cuadro de Punnett para representar y calcular cómo se heredan las características genéticas.</p>
+            </div>
+            <div class="question-card">
+                <h3>2. ¿Qué es el cuadro de Punnett?</h3>
+                <p>Es una tabla o diagrama que muestra todas las combinaciones posibles de alelos que pueden heredar los descendientes.</p>
+            </div>
+            <div class="question-card">
+                <h3>3. ¿Para qué fue desarrollado?</h3>
+                <p>Para predecir de forma sencilla las probabilidades genéticas en los cruces entre organismos.</p>
+            </div>
+            <div class="question-card">
+                <h3>4. ¿Cómo funciona?</h3>
+                <p>Se colocan los alelos de un progenitor en la parte superior y los del otro en el lateral izquierdo, luego se cruzan en las casillas correspondientes.</p>
+            </div>
+            <div class="question-card">
+                <h3>5. ¿Qué son los alelos?</h3>
+                <p>Son las distintas opciones o formas que puede tener un mismo gen (por ejemplo: color de ojos claro u oscuro).</p>
+            </div>
+            <div class="question-card">
+                <h3>6. ¿Qué significa homocigoto?</h3>
+                <p>Que un individuo tiene dos alelos iguales para una característica.</p>
+            </div>
+            <div class="question-card">
+                <h3>7. Homocigoto Dominante vs. Recesivo</h3>
+                <p>• <b>Homocigoto Dominante:</b> Dos alelos dominantes iguales (ejemplo: <code>AA</code>).<br>
+                • <b>Homocigoto Recesivo:</b> Dos alelos recesivos iguales (ejemplo: <code>aa</code>).</p>
+            </div>
+            <div class="question-card">
+                <h3>8. ¿Qué significa heterocigoto?</h3>
+                <p>Que tiene dos alelos diferentes para la misma característica (ejemplo: <code>Aa</code>).</p>
+            </div>
+        </div>
+
+        <!-- GENERADOR DE PUNNETT -->
+        <div id="punnett-sim" class="tab-content">
+            <div class="punnett-controls">
+                <div class="select-group">
+                    <label>Padre:</label>
+                    <select id="p1-select" onchange="calculatePunnett()">
+                        <option value="Aa">Heterocigoto (Aa)</option>
+                        <option value="AA">Homocigoto Dominante (AA)</option>
+                        <option value="aa">Homocigoto Recesivo (aa)</option>
+                    </select>
+                </div>
+                <div style="font-size: 1.2rem; font-weight: bold; color: var(--texto-titulo);">✕</div>
+                <div class="select-group">
+                    <label>Madre:</label>
+                    <select id="p2-select" onchange="calculatePunnett()">
+                        <option value="Aa">Heterocigoto (Aa)</option>
+                        <option value="AA">Homocigoto Dominante (AA)</option>
+                        <option value="aa">Homocigoto Recesivo (aa)</option>
+                    </select>
+                </div>
+            </div>
+            <div id="punnett-table-container"></div>
+            <div id="punnett-results" style="background-color: var(--beige-caja); padding: 12px; border-radius: 8px; border: 1px solid var(--borde-caja);"></div>
+        </div>
+
+        <!-- CRONÓMETRO -->
+        <div id="timer" class="tab-content">
+            <div class="timer-box">
+                <h3 style="margin-top:0; color: var(--texto-titulo);">Control de Tiempo (5 a 6 minutos)</h3>
+                <div class="timer-display" id="time-display">00:00</div>
+                <button class="btn" onclick="startTimer()">Iniciar</button>
+                <button class="btn" onclick="pauseTimer()">Pausar</button>
+                <button class="btn btn-reset" onclick="resetTimer()">Reiniciar</button>
+                <div id="timer-status" style="margin-top: 10px; font-weight: bold;"></div>
+            </div>
+        </div>
+
+        <!-- FLASHCARDS -->
+        <div id="flashcards" class="tab-content">
+            <div class="flashcard" onclick="toggleCard()">
+                <div style="font-size: 0.8rem; color: #888; font-weight: bold; margin-bottom: 5px;" id="card-tag">PREGUNTA</div>
+                <div id="card-text"><b>¿Qué significa Heterocigoto?</b></div>
+            </div>
+            <div style="text-align: center;">
+                <button class="btn" onclick="prevCard()">Anterior</button>
+                <button class="btn" onclick="nextCard()">Siguiente</button>
+            </div>
+        </div>
+
+        <!-- QUIZ AL PUBLICO -->
+        <div id="quiz" class="tab-content">
+            <div class="quiz-card">
+                <h3>1. Si cruzamos dos alelos Aa x Aa, ¿cuál es la probabilidad de obtener "aa"?</h3>
+                <button class="option-btn" onclick="checkAnswer(this, false, 'q1')">0%</button>
+                <button class="option-btn" onclick="checkAnswer(this, true, 'q1')">25%</button>
+                <button class="option-btn" onclick="checkAnswer(this, false, 'q1')">50%</button>
+                <div id="q1-feedback" class="feedback"></div>
+            </div>
+
+            <div class="quiz-card">
+                <h3>2. ¿Cómo se representan las letras de un Homocigoto Dominante?</h3>
+                <button class="option-btn" onclick="checkAnswer(this, true, 'q2')">AA (Dos mayúsculas)</button>
+                <button class="option-btn" onclick="checkAnswer(this, false, 'q2')">Aa (Una mayúscula y una minúscula)</button>
+                <button class="option-btn" onclick="checkAnswer(this, false, 'q2')">aa (Dos minúsculas)</button>
+                <div id="q2-feedback" class="feedback"></div>
+            </div>
+
+            <div class="quiz-card">
+                <h3>3. ¿Qué son los alelos?</h3>
+                <button class="option-btn" onclick="checkAnswer(this, true, 'q3')">Las diferentes formas que puede tener un mismo gen</button>
+                <button class="option-btn" onclick="checkAnswer(this, false, 'q3')">Células del cuerpo humano</button>
+                <button class="option-btn" onclick="checkAnswer(this, false, 'q3')">Partes de la planta de guisante</button>
+                <div id="q3-feedback" class="feedback"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function switchTab(tabId) {
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        event.currentTarget.classList.add('active');
+    }
+
+    function calculatePunnett() {
+        const p1 = document.getElementById('p1-select').value.split('');
+        const p2 = document.getElementById('p2-select').value.split('');
+
+        const format = (pair) => pair[1] === 'A' && pair[0] === 'a' ? 'Aa' : pair;
+
+        const c1 = format(p1[0] + p2[0]);
+        const c2 = format(p1[1] + p2[0]);
+        const c3 = format(p1[0] + p2[1]);
+        const c4 = format(p1[1] + p2[1]);
+
+        document.getElementById('punnett-table-container').innerHTML = `
+            <table class="punnett-table">
+                <tr><th>♀ \\ ♂</th><th>${p1[0]}</th><th>${p1[1]}</th></tr>
+                <tr><th>${p2[0]}</th><td><b>${c1}</b></td><td><b>${c2}</b></td></tr>
+                <tr><th>${p2[1]}</th><td><b>${c3}</b></td><td><b>${c4}</b></td></tr>
+            </table>
+        `;
+
+        const combos = [c1, c2, c3, c4];
+        let AA = combos.filter(x => x === 'AA').length * 25;
+        let Aa = combos.filter(x => x === 'Aa').length * 25;
+        let aa = combos.filter(x => x === 'aa').length * 25;
+
+        document.getElementById('punnett-results').innerHTML = `
+            <b>Resultados del cruce:</b><br>
+            ${AA > 0 ? `• ${AA}% Homocigoto Dominante (AA)<br>` : ''}
+            ${Aa > 0 ? `• ${Aa}% Heterocigoto (Aa)<br>` : ''}
+            ${aa > 0 ? `• ${aa}% Homocigoto Recesivo (aa)` : ''}
+        `;
+    }
+    calculatePunnett();
+
+    let seconds = 0, timerId = null;
+    function startTimer() {
+        if (timerId) return;
+        timerId = setInterval(() => {
+            seconds++;
+            const mins = Math.floor(seconds / 60).toString().padStart(2, '0');
+            const secs = (seconds % 60).toString().padStart(2, '0');
+            document.getElementById('time-display').textContent = `${mins}:${secs}`;
+            const status = document.getElementById('timer-status');
+            if (seconds >= 300 && seconds <= 360) {
+                status.textContent = "¡Tiempo ideal alcanzado!";
+                status.style.color = "var(--verde-correcto)";
+            } else if (seconds > 360) {
+                status.textContent = "Excediste los 6 minutos";
+                status.style.color = "var(--rojo-incorrecto)";
+            } else {
+                status.textContent = "";
+            }
+        }, 1000);
+    }
+    function pauseTimer() { clearInterval(timerId); timerId = null; }
+    function resetTimer() { pauseTimer(); seconds = 0; document.getElementById('time-display').textContent = "00:00"; document.getElementById('timer-status').textContent = ""; }
+
+    const cards = [
+        { q: "¿Qué significa Heterocigoto?", a: "Tener dos alelos diferentes para un gen (Aa)." },
+        { q: "¿Quién fue Reginald Punnett?", a: "Genetista creador del cuadro de Punnett." },
+        { q: "¿Qué es un alelo?", a: "Cada forma diferente que puede tener un gen." },
+        { q: "¿Qué es Homocigoto Dominante?", a: "Tener dos alelos dominantes iguales (AA)." }
+    ];
+    let cardIdx = 0, isFlipped = false;
+
+    function toggleCard() {
+        isFlipped = !isFlipped;
+        document.getElementById('card-tag').textContent = isFlipped ? "RESPUESTA" : "PREGUNTA";
+        document.getElementById('card-text').innerHTML = `<b>${isFlipped ? cards[cardIdx].a : cards[cardIdx].q}</b>`;
+    }
+    function nextCard() { cardIdx = (cardIdx + 1) % cards.length; isFlipped = false; toggleCard(); toggleCard(); }
+    function prevCard() { cardIdx = (cardIdx - 1 + cards.length) % cards.length; isFlipped = false; toggleCard(); toggleCard(); }
+
+    function checkAnswer(btn, isCorrect, qId) {
+        const feedback = document.getElementById(qId + '-feedback');
+        feedback.style.display = 'block';
+        if (isCorrect) {
+            feedback.textContent = "Correcto";
+            feedback.style.color = "var(--verde-correcto)";
+        } else {
+            feedback.textContent = "Incorrecto";
+            feedback.style.color = "var(--rojo-incorrecto)";
+        }
+    }
+</script>
+
+</body>
+</html>
